@@ -35,6 +35,12 @@ class FetchRequest(BaseModel):
     list_url: HttpUrl = Field(..., description="采购公告列表页 URL")
     project_code: str = Field(..., min_length=1, description="项目编号，如 GSB-2026-001")
     timeout: float = Field(10.0, ge=1.0, le=60.0, description="单次请求超时时间（秒）")
+    max_rate_limit_wait: float = Field(
+        10.0,
+        ge=0.0,
+        le=120.0,
+        description="本查询为 429 限流冷却等待的总时长上限（秒），所有并发详情共享；超限即按待核实处理",
+    )
 
 
 class NoticeRecord(BaseModel):

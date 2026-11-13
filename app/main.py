@@ -37,10 +37,12 @@ pre { background: #f4f4f6; padding: 1rem; border-radius: 8px; overflow:auto; max
 </head>
 <body>
 <h1>采购公告采集 API 演示</h1>
-<p class="hint">示例站点由 docker compose 中的 nginx 提供，默认地址 <code>http://localhost:8080/list.html</code></p>
+<p class="hint">示例站点由 docker compose 提供：静态公告 <code>http://localhost:8080/list.html</code>，
+限流演示 <code>http://localhost:8081/ratelimited/list.html</code></p>
 <form id="f">
-  <p><label>列表页 URL <input id="list_url" value="http://localhost:8080/list.html"></label></p>
+  <p><label>列表页 URL <input id="list_url" value="http://localhost:8080/list.html" style="width:36rem"></label></p>
   <p><label>项目编号 <input id="project_code" value="GSB-2026-001"></label></p>
+  <p><label>429 限流等待总上限（秒） <input id="max_rate_limit_wait" type="number" value="10" min="0" max="120" step="1"></label></p>
   <button type="submit">采集并合并</button>
 </form>
 <pre id="out">响应将显示在这里……</pre>
@@ -51,7 +53,8 @@ document.getElementById('f').addEventListener('submit', async (e) => {
   out.textContent = '请求中……';
   const payload = {
     list_url: document.getElementById('list_url').value,
-    project_code: document.getElementById('project_code').value
+    project_code: document.getElementById('project_code').value,
+    max_rate_limit_wait: Number(document.getElementById('max_rate_limit_wait').value)
   };
   try {
     const resp = await fetch('/api/v1/collect', {
@@ -89,5 +92,15 @@ async def collect_get(
     list_url: str = Query(..., description="采购公告列表页 URL"),
     project_code: str = Query(..., description="项目编号"),
     timeout: float = Query(10.0, ge=1.0, le=60.0),
+    max_rate_limit_wait: float = Query(
+        10.0, ge=0.0, le=120.0, description="429 限流冷却等待总时长上限（秒），所有并发详情共享"
+    ),
 ) -> FetchResponse:
-    return await collect(FetchRequest(list_url=list_url, project_code=project_code, timeout=timeout))
+    return await collect(
+        FetchRequest(
+            list_url=list_url,
+            project_code=project_code,
+            timeout=timeout,
+            max_rate_limit_wait=max_rate_limit_wait,
+        )
+    )

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>某市政府采购网 - 限流演示公告列表</title>
+<style>
+body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; margin: 2rem; background:#fafafa; }
+table { border-collapse: collapse; width: 100%; background:#fff; }
+th, td { border: 1px solid #ddd; padding: .55rem .8rem; text-align: left; }
+th { background: #f0f3f7; }
+a { color: #1a5fb4; text-decoration: none; }
+a:hover { text-decoration: underline; }
+.badge { display:inline-block; font-size:.75rem; padding:.1rem .45rem; border-radius:10px; background:#eef; color:#335; margin-left:.4rem;}
+.hint { color:#8a4b00; background:#fff6e5; border:1px solid #f0d3a3; padding:.7rem 1rem; border-radius:8px; }
+</style>
+</head>
+<body>
+<h1>某市政府采购网 · 限流演示公告列表</h1>
+<p class="hint">
+本列表由 <code>ratelimit_server.py</code>（Python 标准库）托管，对部分详情页模拟短时限流：
+受控路径前若干次请求返回 <code>429 + Retry-After</code>，用于演练采集 API 的有界自动恢复。
+普通静态页面（如原公告）始终正常返回。
+</p>
+<table>
+  <thead><tr><th>公告标题</th><th>项目编号</th><th>发布日期</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><a href="/ratelimited/g004-original.html">智慧停车管理平台采购项目公开招标公告</a><span class="badge">原公告</span></td>
+      <td>GSB-2026-004</td><td>2026-11-02</td>
+    </tr>
+    <tr>
+      <td><a href="/ratelimited/g004-corr.html">智慧停车管理平台采购项目更正公告（投标截止时间延期，首次访问限流）</a><span class="badge">更正·先限流后恢复</span></td>
+      <td>GSB-2026-004</td><td>2026-11-07</td>
+    </tr>
+    <tr>
+      <td><a href="/ratelimited/g005-original.html">校园安防系统运维服务采购项目竞争性磋商公告</a><span class="badge">原公告</span></td>
+      <td>GSB-2026-005</td><td>2026-11-03</td>
+    </tr>
+    <tr>
+      <td><a href="/ratelimited/g005-corr.html">校园安防系统运维服务采购项目更正公告（持续限流，Retry-After 为 HTTP 日期）</a><span class="badge">更正·持续限流</span></td>
+      <td>GSB-2026-005</td><td>2026-11-08</td>
+    </tr>
+    <tr>
+      <td><a href="/ratelimited/g006-original.html">河湖水质监测设备采购项目公开招标公告</a><span class="badge">原公告</span></td>
+      <td>GSB-2026-006</td><td>2026-11-04</td>
+    </tr>
+    <tr>
+      <td><a href="/ratelimited/g006-corr.html">河湖水质监测设备采购项目更正公告（持续限流且 Retry-After 无效）</a><span class="badge">更正·无效头</span></td>
+      <td>GSB-2026-006</td><td>2026-11-09</td>
+    </tr>
+    <tr>
+      <td><a href="/ratelimited/g007-original.html">政务云存储扩容服务采购项目公开招标公告</a><span class="badge">原公告</span></td>
+      <td>GSB-2026-007</td><td>2026-11-05</td>
+    </tr>
+    <tr>
+      <td><a href="/ratelimited/unrelated-throttled.html">其他单位历史公告归档（无关项目，持续限流）</a><span class="badge">其他项目·持续限流</span></td>
+      <td>GSB-2025-777</td><td>2025-10-20</td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>
